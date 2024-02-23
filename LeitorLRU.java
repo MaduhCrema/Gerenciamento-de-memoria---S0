@@ -2,31 +2,34 @@ import java.io.*;
 import java.util.*;
 
 public class LeitorLRU {
-
+    //20:28hrs
     public static void main(String[] args) {
         try {
-            File file = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\teste.txt");
+            File file = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\trace2.txt");
 
             Scanner scan = new Scanner(file); // Leitor de arquivo
             String acesso_atual, proximo_acesso; // Variáveis para armazenar os traces da vez e poder compará-los
 
-            List<String> reference_string = new ArrayList<>(); // Lista que vai gerar string de referência
+            // Determinar o tamanho do arquivo
+            int tamanho_arquivo = 0;
+            while (scan.hasNextLine()) {
+                scan.nextLine();
+                tamanho_arquivo++;
+            }
+            scan.close();
 
+            // Inicializar o array com o tamanho do arquivo
+            String[] reference_string = new String[tamanho_arquivo];
+            int referenciaIndex = 0;
+
+            // Reabrir o arquivo para leitura
+            scan = new Scanner(file);
             acesso_atual = scan.nextLine(); // Armazena a primeira linha
             acesso_atual = completa_string(acesso_atual);
             acesso_atual = acesso_atual.substring(0, acesso_atual.length() - 3); // Remove deslocamento
-            reference_string.add(acesso_atual); // Adiciona a string de referência
+            reference_string[referenciaIndex++] = acesso_atual; // Adiciona a string de referência
 
             int linhas_arquivo = 1;
-
-            // Criar um novo arquivo para armazenar a reference_string
-            File outputFile = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\reference_string.txt");
-            if (!outputFile.exists()) {
-                outputFile.createNewFile(); // Cria o arquivo se não existir
-            }
-
-            // Inicializar o BufferedWriter
-            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
 
             while (scan.hasNextLine()) {
 
@@ -35,7 +38,7 @@ public class LeitorLRU {
                 proximo_acesso = proximo_acesso.substring(0, proximo_acesso.length() - 3);
 
                 if (!acesso_atual.equals(proximo_acesso)) { // Verifica se não acessa a mesma página do anterior
-                    reference_string.add(proximo_acesso); // Se não for igual, entra para reference string
+                    reference_string[referenciaIndex++] = proximo_acesso; // Se não for igual, entra para reference string
                 }
 
                 acesso_atual = proximo_acesso; // Reinicia loop
@@ -44,17 +47,18 @@ public class LeitorLRU {
             scan.close();
 
             // Escrever os elementos da reference_string no arquivo
-            for (String str : reference_string) {
-                writer.write(str);
+            File outputFile = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\reference_string.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+            for (int i = 0; i < referenciaIndex; i++) {
+                writer.write(reference_string[i]);
                 writer.newLine(); // Adicionar uma nova linha após cada elemento
             }
-
-            // Fechar o BufferedWriter após terminar de escrever
             writer.close();
-            compara_log(reference_string.size(), linhas_arquivo);
+
+            compara_log(referenciaIndex, linhas_arquivo);
 
             // Realizar a leitura do arquivo de referência e adicionar as próximas ocorrências
-            addNextOccurrencesToReferenceFile(outputFile, reference_string);
+            addNextOccurrencesToReferenceFile(outputFile, reference_string, referenciaIndex);
 
 
         } catch (IOException e) {
@@ -84,7 +88,8 @@ public class LeitorLRU {
 
         return acesso_atual;
     }
-    private static void addNextOccurrencesToReferenceFile(File inputFile, List<String> referenceString) {
+
+    private static void addNextOccurrencesToReferenceFile(File inputFile, String[] referenceString, int size) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile)); // Leitor de arquivo
             // Inicializar o BufferedWriter
@@ -95,48 +100,42 @@ public class LeitorLRU {
             // Criar um novo arquivo para armazenar as referências com as próximas ocorrências            
             if (!outputFile.exists()) {
                 outputFile.createNewFile(); // Cria o arquivo se não existir
-            }        
+            }
 
             String line;
             while ((line = reader.readLine()) != null) {
-                //System.out.println(lineNumber);
                 line = line.trim(); // Remove espaços em branco
-                int nextOccurrence = fileNextOcc(inputFile.getPath(), line, lineNumber);
-                //System.out.println("i " + nextOccurrence);
-                //System.out.println("line " + line);                    
-                
+                int nextOccurrence = fileNextOcc(inputFile.getPath(), line, lineNumber, referenceString, size);
                 writer.write(line + ", " + nextOccurrence); // Escreve a página seguida pelo próximo número de linha
                 writer.newLine(); // Adicionar uma nova linha após cada elemento
-                 lineNumber++;
+                lineNumber++;
             }
             reader.close();
-    
-            
-    
+
             // Fechar o BufferedWriter após terminar de escrever
             writer.close();
-    
+
         } catch (IOException e) {
             e.printStackTrace(); // Se ocorrer uma IOException, imprime a stack trace
         }
     }
 
-    private static int fileNextOcc(String filePath, String page, int currentLine) {
+    private static int fileNextOcc(String filePath, String page, int currentLine, String[] referenceString, int size) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            List<String> entracys = new ArrayList<>();
+            String[] entracys = new String[size]; // Array para armazenar as entradas
             String line;
+            int index = 0; // Índice para o array
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                entracys.add(line);
+                entracys[index++] = line; // Adiciona a linha ao array e incrementa o índice
             }
             reader.close();
-    
+
             // Iterar de currentLine - 1 até 0
             for (int i = currentLine - 2; i >= 0; i--) {
-                if (entracys.get(i).equals(page)) {
+                if (i < size && entracys[i].equals(page)) {
                     int indice = i + 1; // Incrementar o índice para ajustar a indexação do usuário
-                    System.out.println("teve ocorrencia: " + indice);
                     return indice;
                 }
             }
@@ -146,6 +145,4 @@ public class LeitorLRU {
         }
         return 0;
     }
-    
-    
 }
