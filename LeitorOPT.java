@@ -5,7 +5,7 @@ public class LeitorOPT {
 
     public static void main(String[] args) {
         try {
-            File file = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\teste.txt");
+            File file = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\trace1.txt");
 
             Scanner scan = new Scanner(file); // Leitor de arquivo
             String acesso_atual, proximo_acesso; // Variáveis para armazenar os traces da vez e poder compará-los
@@ -87,9 +87,9 @@ public class LeitorOPT {
     private static void addNextOccurrencesToReferenceFile(File inputFile, List<String> referenceString) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(inputFile)); // Leitor de arquivo
-            Map<String, Integer> nextOccurrenceMap = new LinkedHashMap<>(); // Usando LinkedHashMap para manter a ordem de inserção
+           
             // Inicializar o BufferedWriter
-            File outputFile = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\reference_string_with_occurrences.txt");
+            File outputFile = new File("C:\\Users\\eduar\\Desktop\\Unioeste\\Unioeste\\4-Ano-CC\\SO\\Trabalhos\\Trabalho-02\\reference_string_with_occurrences-OPT.txt");
             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
             int lineNumber = 1; // Número da linha atual
 
@@ -100,11 +100,11 @@ public class LeitorOPT {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(lineNumber);
+                //System.out.println(lineNumber);
                 line = line.trim(); // Remove espaços em branco
                 int nextOccurrence = fileNextOcc(inputFile.getPath(), line, lineNumber);
-                System.out.println("i " + nextOccurrence);
-                System.out.println("line " + line);                    
+                //System.out.println("i " + nextOccurrence);
+                //System.out.println("line " + line);                    
                 
                 writer.write(line + ", " + nextOccurrence); // Escreve a página seguida pelo próximo número de linha
                 writer.newLine(); // Adicionar uma nova linha após cada elemento
@@ -126,23 +126,23 @@ public class LeitorOPT {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             List<String> entracys = new ArrayList<>();
-            System.out.println("current line " + currentLine);
-            System.out.println("page " + page);
+            //System.out.println("current line " + currentLine);
+            //System.out.println("page " + page);
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 entracys.add(line);
                 
             }
-            System.out.println(entracys);
+            //System.out.println(entracys);
             reader.close();
 
             int entracyslen = entracys.size();
             for(int i = currentLine; i < entracyslen; i++){
-                System.out.println("entracys " + entracys.get(i));
+                //System.out.println("entracys " + entracys.get(i));
                 if(entracys.get(i).equals(page)){
                     int indice = i + 1;
-                    System.out.println("teve ocorrencia: " + indice );
+                    //System.out.println("teve ocorrencia: " + indice );
                     return indice;
                 }
             }       
