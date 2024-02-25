@@ -27,7 +27,7 @@ def main():
             referenceString.append(acesso_atual)
 
             linhas_arquivo = 1
-            entracys = [acesso_atual]
+            
             for line in file:
                 proximo_acesso = completa_string(line.strip()[:-3])
                 if acesso_atual != proximo_acesso:
