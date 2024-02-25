@@ -10,9 +10,9 @@ def compara_log(tamanho_referenceString, linhas_arquivo):
     print("Tamanho original do log:", linhas_arquivo)
     print("O tamanho da reference string é", (tamanho_referenceString / linhas_arquivo) * 100, "% do log original.")
 
-def fileNextOcc(entracys, page, currentLine):
-    for i, entry in enumerate(entracys[currentLine:], start=currentLine):
-        if entry == page:
+def fileNextOcc(entries, page, current_line):
+    for i in range(current_line, len(entries)):
+        if entries[i] == page:
             return i + 1
     return 99999999
 
@@ -27,27 +27,26 @@ def main():
             referenceString.append(acesso_atual)
 
             linhas_arquivo = 1
+
             for line in file:
                 proximo_acesso = completa_string(line.strip()[:-3])
                 if acesso_atual != proximo_acesso:
                     referenceString.append(proximo_acesso)
                 acesso_atual = proximo_acesso
-                
                 linhas_arquivo += 1
 
         with open(outputFile, 'w') as writer:
             for item in referenceString:
                 writer.write("%s\n" % item)
-
+        #print(len(referenceString))
         compara_log(len(referenceString), linhas_arquivo)
         addNextOccurrencesToReferenceFile(referenceString)
 
     except IOError as e:
         print("Erro de E/S:", e)
 
-
 def addNextOccurrencesToReferenceFile(entracys):
-    outputFile = "referencia4-OPT-occ.txt"
+    outputFile = "referencia1-OPT-occ.txt"
     try:
         with open(outputFile, 'w') as writer:
             lineNumber = 1
@@ -58,6 +57,7 @@ def addNextOccurrencesToReferenceFile(entracys):
                 print(lineNumber)
     except IOError as e:
         print("Erro de E/S:", e)
+
 
 if __name__ == "__main__":
     main()
