@@ -18,8 +18,8 @@ def fileNextOcc(entracys, page, currentLine):
 
 def main():
     try:
-        filePath = "trace1.txt"
-        outputFile = "referencia1-LRU.txt"
+        filePath = "trace1"
+        outputFile = "referencia4-LRU.txt"
         referenceString = []
 
         with open(filePath, 'r') as file:
@@ -33,31 +33,30 @@ def main():
                 if acesso_atual != proximo_acesso:
                     referenceString.append(proximo_acesso)
                 acesso_atual = proximo_acesso
-                entracys.append(proximo_acesso)
                 linhas_arquivo += 1
 
         with open(outputFile, 'w') as writer:
             for item in referenceString:
                 writer.write("%s\n" % item)
-
+        #print(len(referenceString))
         compara_log(len(referenceString), linhas_arquivo)
-        addNextOccurrencesToReferenceFile(filePath, outputFile, entracys)
+        addNextOccurrencesToReferenceFile(referenceString)
 
     except IOError as e:
         print("Erro de E/S:", e)
 
-def addNextOccurrencesToReferenceFile(inputFile, outputFile, entracys):
+def addNextOccurrencesToReferenceFile(entracys):
+    outputFile = "referencia4-LRU-occ.txt"
     try:
-        with open(inputFile, 'r') as reader, open(outputFile.replace('referencia1-LRU.txt', 'referencia1-LRU-occ.txt'), 'w') as writer:
+        with open(outputFile, 'w') as writer:
             lineNumber = 1
-            for line in reader:
-                page = completa_string(line.strip()[:-3])
+            for page in entracys:
                 nextOccurrence = fileNextOcc(entracys, page, lineNumber)
                 writer.write(f"{page}, {nextOccurrence}\n")
                 lineNumber += 1
-                print(lineNumber)
     except IOError as e:
         print("Erro de E/S:", e)
+
 
 if __name__ == "__main__":
     main()
