@@ -14,7 +14,7 @@ def fileNextOcc(entracys, page, currentLine):
     for i, entry in enumerate(entracys[currentLine:], start=currentLine):
         if entry == page:
             return i + 1
-    return 0
+    return 999999999
 
 def main():
     try:
