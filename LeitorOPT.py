@@ -14,7 +14,7 @@ def fileNextOcc(entracys, page, currentLine):
     for i, entry in enumerate(entracys[currentLine:], start=currentLine):
         if entry == page:
             return i + 1
-    return 999999999
+    return 99999999
 
 def main():
     try:
@@ -33,7 +33,7 @@ def main():
                 if acesso_atual != proximo_acesso:
                     referenceString.append(proximo_acesso)
                 acesso_atual = proximo_acesso
-                entracys.append(proximo_acesso)
+                
                 linhas_arquivo += 1
 
         with open(outputFile, 'w') as writer:
@@ -41,17 +41,18 @@ def main():
                 writer.write("%s\n" % item)
 
         compara_log(len(referenceString), linhas_arquivo)
-        addNextOccurrencesToReferenceFile(filePath, outputFile, entracys)
+        addNextOccurrencesToReferenceFile(referenceString)
 
     except IOError as e:
         print("Erro de E/S:", e)
 
-def addNextOccurrencesToReferenceFile(inputFile, outputFile, entracys):
+
+def addNextOccurrencesToReferenceFile(entracys):
+    outputFile = "referencia4-OPT-occ.txt"
     try:
-        with open(inputFile, 'r') as reader, open(outputFile.replace('referencia1-OPT.txt', 'referencia1-OPT-occ.txt'), 'w') as writer:
+        with open(outputFile, 'w') as writer:
             lineNumber = 1
-            for line in reader:
-                page = completa_string(line.strip()[:-3])
+            for page in entracys:
                 nextOccurrence = fileNextOcc(entracys, page, lineNumber)
                 writer.write(f"{page}, {nextOccurrence}\n")
                 lineNumber += 1
