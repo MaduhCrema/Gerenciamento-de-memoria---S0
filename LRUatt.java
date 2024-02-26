@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class LRU {
+public class LRUatt {
 
     public static void main(String[] args) {
         try {
