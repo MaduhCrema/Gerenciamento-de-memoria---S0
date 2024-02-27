@@ -1,12 +1,12 @@
 import java.io.*;
 import java.util.*;
 
-public class LRUatt {
+public class LRU {
 
     public static void main(String[] args) {
         try {
             // Lendo o arquivo de referência LRU
-            File inputFile = new File("C:\\Users\\gabxl\\OneDrive\\Área de Trabalho\\Desktop\\Conteúdos\\SO\\Trab 2\\LRU\\referencia2-LRU.txt");
+            File inputFile = new File("teste.txt");
             BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 
             // Definindo o número de frames livres para cada caso
@@ -70,7 +70,7 @@ public class LRUatt {
             }
     
             // Imprime os frames após cada iteração
-           // System.out.println("Frames após a iteração: " + cache);
+            System.out.println("Frames após a iteração: " + cache);
         }
     
         // Retornando o número total de falhas de página
